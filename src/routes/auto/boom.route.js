@@ -6,7 +6,7 @@ import { Router } from 'express'
 const router = Router()
 
 router.get('/boom', (_req, _res, next) => {
-  const err = new Error('Boom!')
+  const err = new Error('Booom!')
   err.status = 500
   next(err)
 })
