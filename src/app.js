@@ -11,12 +11,16 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { createRequire } from 'node:module'
 import { errorHandler } from './utils/errorHandler.js'
+import studentrouter from './routes/auto/student.route.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const require = createRequire(import.meta.url)
 
 const app = express()
+
+// Parse incoming JSON request bodies
+app.use(express.json())
 
 // Simple root + health endpoints
 app.get('/', (_req, res) => res.json({ ok: true, message: 'Hello from CI/CD demo 👋' }))
@@ -35,6 +39,6 @@ if (fs.existsSync(autoDir)) {
 }
 
 // Global error middleware last
+app.use('/api/students', studentrouter)
 app.use(errorHandler)
-
 export default app

@@ -1,0 +1,14 @@
+$kind: http-request
+body:
+  type: formdata
+  content: []
+order: 1000
+method: GET
+url: http://localhost:3000/api/students
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status code is 200", function () {
+        pm.response.to.have.status(200);
+      });
+    language: text/javascript
