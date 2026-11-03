@@ -17,6 +17,7 @@ const __dirname = path.dirname(__filename)
 const require = createRequire(import.meta.url)
 
 const app = express()
+app.use(express.json())
 
 // Simple root + health endpoints
 app.get('/', (_req, res) => res.json({ ok: true, message: 'Hello from CI/CD demo 👋' }))

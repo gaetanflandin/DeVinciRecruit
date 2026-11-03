@@ -10,10 +10,10 @@ const REQUIRED_FIELDS = ['firstName', 'lastName', 'email', 'year', 'major', 'mot
 const clean = (value) => String(value).trim()
 
 // GET all applications
-router.get('/', (req, res) => res.status(200).json(applications))
+router.get('/applications', (req, res) => res.status(200).json(applications))
 
 // GET one application
-router.get('/:id', (req, res) => {
+router.get('/applications/:id', (req, res) => {
   const application = applications.find((a) => a.id === Number(req.params.id))
   if (!application) {
     return res.status(404).json({ error: 'Application not found' })
