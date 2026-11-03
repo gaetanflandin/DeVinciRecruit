@@ -22,7 +22,7 @@ router.get('/applications/:id', (req, res) => {
 })
 
 // POST a new application
-router.post('/', (req, res) => {
+router.post('/applications', (req, res) => {
   const body = req.body ?? {}
 
   const missing = REQUIRED_FIELDS.filter(
