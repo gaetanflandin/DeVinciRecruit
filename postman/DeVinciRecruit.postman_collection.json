@@ -1,0 +1,56 @@
+{
+  "info": {
+    "name": "De Vinci Recruit API Tests",
+    "description": "Lab 5: retrieve sample association profiles. Logo URLs are placeholders.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET associations",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/json" }
+        ],
+        "url": {
+          "raw": "http://localhost:3000/api/associations",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "3000",
+          "path": ["api", "associations"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () {",
+              "  pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('Response is a JSON array', function () {",
+              "  pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+              "  pm.expect(pm.response.json()).to.be.an('array');",
+              "});",
+              "",
+              "pm.test('Association objects contain the required fields', function () {",
+              "  const associations = pm.response.json();",
+              "  pm.expect(associations).to.be.an('array').that.is.not.empty;",
+              "  associations.forEach(function (association) {",
+              "    pm.expect(association).to.have.all.keys('id', 'name', 'description', 'category', 'logoUrl');",
+              "    pm.expect(association.id).to.be.a('number');",
+              "    ['name', 'description', 'category', 'logoUrl'].forEach(function (field) {",
+              "      pm.expect(association[field]).to.be.a('string').that.is.not.empty;",
+              "    });",
+              "  });",
+              "});"
+            ]
+          }
+        }
+      ],
+      "response": []
+    }
+  ]
+}
