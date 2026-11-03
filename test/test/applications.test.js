@@ -76,4 +76,6 @@ describe('Applications API', () => {
     const res = await request(app).get(`${BASE}/9999`)
     expect(res.status).toBe(404)
   })
+
 })
+
