@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest'
 import app from '../src/app.js'
 
 // Mets ici le vrai chemin de ta route (il depend du nom du fichier)
-const BASE = 'C:\\Users\\krist\\OneDrive\\Bureau\\DeVinciRecruit\\src\\routes\\auto\\application_form.route.js'
+const BASE = 'src\routes\auto\application_form.route.js'
 
 const validApplication = {
   firstName: 'Alice',
