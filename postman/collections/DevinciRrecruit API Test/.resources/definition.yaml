@@ -1,0 +1,6 @@
+$kind: collection
+name: DevinciRrecruit API Test
+variables:
+  - key: base_url
+    value: 'http://localhost:3000'
+    description: URL locale de l'API
