@@ -18,7 +18,6 @@ const __dirname = path.dirname(__filename)
 
 const app = express()
 
-// Parse incoming JSON request bodies
 app.use(express.json())
 
 // Simple root + health endpoints
@@ -33,13 +32,12 @@ if (fs.existsSync(autoDir)) {
   const manual = ['student.route.js', 'interviews.route.js']
   const files = fs.readdirSync(autoDir).filter(f => f.endsWith('.route.js') && !manual.includes(f))
   for (const f of files) {
-    // Import ES modules so the test runner can measure route coverage.
+    if (f === 'student.route.js') continue
     const mod = await import(new URL(`./routes/auto/${f}`, import.meta.url).href)
     const router = mod.default || mod
     if (router) app.use('/', router)
   }
 }
-
 // Routers with their own prefix
 app.use('/api/students', studentrouter)
 app.use('/api/interviews', interviewsRouter)
