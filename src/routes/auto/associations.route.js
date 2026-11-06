@@ -77,4 +77,3 @@ router.delete('/api/associations/:id', (_req, res) => {
 })
 
 export default router
-
