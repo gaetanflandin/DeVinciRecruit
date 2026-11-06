@@ -17,7 +17,6 @@ const __dirname = path.dirname(__filename)
 
 const app = express()
 
-// Parse incoming JSON request bodies
 app.use(express.json())
 
 // Simple root + health endpoints
@@ -29,14 +28,14 @@ const autoDir = path.join(__dirname, 'routes', 'auto')
 if (fs.existsSync(autoDir)) {
   const files = fs.readdirSync(autoDir).filter(f => f.endsWith('.route.js'))
   for (const f of files) {
-    // Import ES modules so the test runner can measure route coverage.
+    if (f === 'student.route.js') continue
     const mod = await import(new URL(`./routes/auto/${f}`, import.meta.url).href)
     const router = mod.default || mod
     if (router) app.use('/', router)
   }
 }
 
-// Global error middleware last
 app.use('/api/students', studentrouter)
+// Global error middleware last
 app.use(errorHandler)
 export default app
