@@ -4,6 +4,12 @@ const router = express.Router()
 const applications = []
 let nextId = 1
 
+// Shared integrity check for forms; future Student Applications storage must
+// preserve this contract when it starts recording formId references.
+export function hasApplicationsForForm (formId) {
+  return applications.some(application => Number(application.formId) === formId)
+}
+
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 const REQUIRED_FIELDS = ['firstName', 'lastName', 'email', 'year', 'major', 'motivation']
 

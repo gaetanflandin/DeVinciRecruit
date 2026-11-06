@@ -647,6 +647,219 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Application Forms CRUD",
+      "description": "Run in order. Uses formId independently of Recruitment Decisions applicationId. Data is in memory.",
+      "item": [
+        {
+          "name": "Create form",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/forms",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "forms"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"associationId\": 1,\n  \"title\": \"Student recruitment\",\n  \"fields\": [\n    {\n      \"name\": \"motivation\",\n      \"label\": \"Why would you like to join?\",\n      \"type\": \"textarea\",\n      \"required\": true\n    }\n  ],\n  \"openDate\": \"2026-11-01\",\n  \"closeDate\": \"2026-12-01\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 201', function () { pm.response.to.have.status(201); });",
+                  "if (pm.response.code === 201) { pm.collectionVariables.set('formId', pm.response.json().id); }",
+                  "pm.test('Form model and ID', function () { const f = pm.response.json(); pm.expect(f).to.have.all.keys('id', 'associationId', 'title', 'fields', 'openDate', 'closeDate'); pm.expect(String(f.id)).to.eql(String(pm.collectionVariables.get('formId'))); pm.expect(f.fields).to.be.an('array').that.is.not.empty; });"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "List forms",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/forms",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "forms"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('List includes created form', function () { pm.expect(pm.response.json().some(f => String(f.id) === String(pm.collectionVariables.get('formId')))).to.eql(true); });"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Get form",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/forms/{{formId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "forms",
+                "{{formId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Form model and ID', function () { const f = pm.response.json(); pm.expect(f).to.have.all.keys('id', 'associationId', 'title', 'fields', 'openDate', 'closeDate'); pm.expect(String(f.id)).to.eql(String(pm.collectionVariables.get('formId'))); pm.expect(f.fields).to.be.an('array').that.is.not.empty; });"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Update form",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/forms/{{formId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "forms",
+                "{{formId}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"associationId\": 1,\n  \"title\": \"Updated recruitment\",\n  \"fields\": [\n    {\n      \"name\": \"motivation\",\n      \"label\": \"Why would you like to join?\",\n      \"type\": \"textarea\",\n      \"required\": true\n    }\n  ],\n  \"openDate\": \"2026-11-01\",\n  \"closeDate\": \"2026-12-01\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Form model and ID', function () { const f = pm.response.json(); pm.expect(f).to.have.all.keys('id', 'associationId', 'title', 'fields', 'openDate', 'closeDate'); pm.expect(String(f.id)).to.eql(String(pm.collectionVariables.get('formId'))); pm.expect(f.fields).to.be.an('array').that.is.not.empty; });",
+                  "pm.test('Updated title', function () { pm.expect(pm.response.json().title).to.eql('Updated recruitment'); });"
+                ]
+              }
+            }
+          ],
+          "response": []
+        },
+        {
+          "name": "Delete form",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/forms/{{formId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "forms",
+                "{{formId}}"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('HTTP 204', function () { pm.response.to.have.status(204); });",
+                  "pm.test('Empty deletion response', function () { pm.expect(pm.response.text()).to.eql(''); });",
+                  "pm.sendRequest(pm.variables.replaceIn('{{baseUrl}}/api/forms/{{formId}}'), function (err, response) { pm.test('Deleted form returns 404', function () { pm.expect(err).to.eql(null); pm.expect(response.code).to.eql(404); }); });"
+                ]
+              }
+            }
+          ],
+          "response": []
+        }
+      ]
     }
   ],
   "variable": [
@@ -668,6 +881,11 @@
     {
       "key": "demoPresidentId",
       "value": "president-1",
+      "type": "string"
+    },
+    {
+      "key": "formId",
+      "value": "1",
       "type": "string"
     }
   ]
