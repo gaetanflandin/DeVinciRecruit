@@ -67,4 +67,38 @@ router.post('/applications', (req, res) => {
   res.status(201).json(newApplication)
 })
 
+// DEMO ONLY: client-supplied headers simulate identity and role, not real security.
+// Replace with authenticated membership checks when AuthService is implemented.
+router.patch('/api/applications/:id/decision', (req, res, next) => {
+  const decidedBy = req.get('X-Demo-User-Id')?.trim()
+  if (req.get('X-Demo-Role') !== 'president' || !decidedBy) {
+    return next(Object.assign(new Error('A demo president identity is required'), { status: 403 }))
+  }
+
+  const id = Number(req.params.id)
+  const application = /^[1-9]\d*$/.test(req.params.id) && Number.isSafeInteger(id)
+    ? applications.find(application => application.id === id)
+    : undefined
+  if (!application) {
+    return next(Object.assign(new Error('Application not found'), { status: 404 }))
+  }
+
+  const decision = req.body?.decision
+  if (!['accepted', 'rejected', 'pending'].includes(decision)) {
+    return next(Object.assign(new Error('decision must be accepted, rejected or pending'), { status: 400 }))
+  }
+
+  application.status = decision
+  application.decidedBy = decision === 'pending' ? null : decidedBy
+  application.decidedAt = decision === 'pending' ? null : new Date().toISOString()
+
+  // Return only decision fields; never copy request notes or other private data.
+  res.status(200).json({
+    id: application.id,
+    status: application.status,
+    decidedBy: application.decidedBy,
+    decidedAt: application.decidedAt
+  })
+})
+
 export default router

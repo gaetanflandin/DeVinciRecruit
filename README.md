@@ -96,3 +96,44 @@ test/
 - `npm run lint` – ESLint check
 
 Enjoy the lab!
+
+
+## Lab 6: Recruitment decisions
+
+`PATCH /api/applications/:id/decision` updates the same in-memory applications
+created by `POST /applications` and read through `GET /applications` or
+`GET /applications/:id`. Existing routes and creation fields are unchanged.
+Send JSON such as `{ "decision": "accepted" }`. Supported values are `accepted`,
+`rejected` and `pending`. The existing application model starts at `pending`,
+which also matches the BRD; the SDD's final values are `accepted` and `rejected`.
+Success returns HTTP 200 with `id`, `status`, `decidedBy` and `decidedAt`.
+Final decisions record the demo user ID and a server-generated ISO timestamp.
+Returning to pending clears both final metadata fields to null. Presidents may
+revise a decision; only the latest decision is retained in memory.
+Invalid or missing decisions return 400; unknown or malformed IDs return 404.
+Errors use the existing centralized error handler.
+
+**Demonstration only, not production security:** no authentication system exists
+in this project yet. This route requires `X-Demo-Role: president` and a nonempty
+`X-Demo-User-Id` (for example `president-1`). Missing identity or another role
+returns 403 before application lookup. These headers are client-controlled and
+can be forged. Applications currently have no association ownership field, so
+this demonstration checks role only and cannot restrict presidents to their own
+association. Replace it with verified identity and association membership checks
+before production use. Existing application GET routes remain unauthenticated.
+
+The decision route accepts only the decision value and never stores request
+notes, roles, or supplied decision metadata. Its response contains only decision
+fields. There is currently no internal-notes storage feature; this change does
+not add one. Full decision history, persistence and email notifications described
+in the SDD remain future integrations.
+
+To verify in Postman Desktop, run `npm start`, import
+`postman/DeVinciRecruit.postman_collection.json`, and run the **Recruitment
+Decisions (DEMO authentication only)** folder in order. `baseUrl` defaults to
+`http://localhost:3000`. The first request creates a candidate with a unique email
+and saves `applicationId`; subsequent requests exercise accepted, rejected,
+pending, invalid (400), student forbidden (403), and missing application (404)
+cases. The final GET checks the shared application's status. Requests include
+status and response assertions. `demoPresidentId` supplies the recorded identity.
+All data resets when the server restarts.
