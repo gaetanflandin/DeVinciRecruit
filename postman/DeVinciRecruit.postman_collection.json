@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "De Vinci Recruit API Tests",
-    "description": "Lab 5: retrieve sample association profiles. Logo URLs are placeholders.",
+    "description": "Lab 6: in-memory association profiles CRUD. Run requests in order; POST saves associationId for GET, PUT and DELETE. Restarting the server resets sample data. POST and PUT require all four profile fields; IDs are server-generated. Logo URLs are placeholders.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -10,14 +10,20 @@
       "request": {
         "method": "GET",
         "header": [
-          { "key": "Accept", "value": "application/json" }
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
         ],
         "url": {
-          "raw": "http://localhost:3000/api/associations",
-          "protocol": "http",
-          "host": ["localhost"],
-          "port": "3000",
-          "path": ["api", "associations"]
+          "raw": "{{baseUrl}}/api/associations",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "associations"
+          ]
         }
       },
       "event": [
@@ -51,6 +57,184 @@
         }
       ],
       "response": []
+    },
+    {
+      "name": "POST association",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/associations",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "associations"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"De Vinci Art Club\",\n  \"description\": \"Students creating art together.\",\n  \"category\": \"Arts\",\n  \"logoUrl\": \"https://example.com/logos/art-club.png\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 201', function () { pm.response.to.have.status(201); });",
+              "if (pm.response.code === 201) { pm.collectionVariables.set('associationId', pm.response.json().id); }"
+            ]
+          }
+        }
+      ],
+      "response": []
+    },
+    {
+      "name": "GET association by ID",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/associations/{{associationId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "associations",
+            "{{associationId}}"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ],
+      "response": []
+    },
+    {
+      "name": "PUT association",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/associations/{{associationId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "associations",
+            "{{associationId}}"
+          ]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"De Vinci Art Club\",\n  \"description\": \"Updated art club profile.\",\n  \"category\": \"Arts\",\n  \"logoUrl\": \"https://example.com/logos/art-club.png\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });"
+            ]
+          }
+        }
+      ],
+      "response": []
+    },
+    {
+      "name": "DELETE association",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/api/associations/{{associationId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "associations",
+            "{{associationId}}"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 204', function () { pm.response.to.have.status(204); });"
+            ]
+          }
+        }
+      ],
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "associationId",
+      "value": "1",
+      "type": "string"
     }
   ]
 }
