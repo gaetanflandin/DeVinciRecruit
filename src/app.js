@@ -17,7 +17,6 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const app = express()
-app.use(express.json())
 
 // Parse incoming JSON request bodies
 app.use(express.json())
@@ -30,7 +29,7 @@ app.get('/health', (_req, res) => res.status(200).send('OK'))
 // (import() instead of require() so that Vitest can measure their coverage)
 const autoDir = path.join(__dirname, 'routes', 'auto')
 if (fs.existsSync(autoDir)) {
-    // These routers are mounted manually below with their own prefix
+  // These routers are mounted manually below with their own prefix
   const manual = ['student.route.js', 'interviews.route.js']
   const files = fs.readdirSync(autoDir).filter(f => f.endsWith('.route.js') && !manual.includes(f))
   for (const f of files) {
@@ -41,8 +40,11 @@ if (fs.existsSync(autoDir)) {
   }
 }
 
-// Global error middleware last
+// Routers with their own prefix
 app.use('/api/students', studentrouter)
 app.use('/api/interviews', interviewsRouter)
+
+// Global error middleware last
 app.use(errorHandler)
+
 export default app
