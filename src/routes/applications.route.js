@@ -1,5 +1,5 @@
 import express from 'express'
-import { associations } from './associations.js'
+import { associations } from './associations.route.js'
 
 const router = express.Router()
 
