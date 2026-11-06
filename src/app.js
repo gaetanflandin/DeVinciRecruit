@@ -11,6 +11,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { errorHandler } from './utils/errorHandler.js'
 import studentrouter from './routes/auto/student.route.js'
+import interviewsRouter from "./routes/auto/interviews.route.js"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -39,5 +40,6 @@ if (fs.existsSync(autoDir)) {
 
 // Global error middleware last
 app.use('/api/students', studentrouter)
+app.use("/api/interviews", interviewsRouter)
 app.use(errorHandler)
 export default app
