@@ -11,8 +11,6 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { errorHandler } from './utils/errorHandler.js'
 import studentrouter from './routes/auto/student.route.js'
-import roomsRouter from "./routes/rooms.route.js";
-import interviewsRouter from "./routes/interviews.route.js";
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -38,9 +36,6 @@ if (fs.existsSync(autoDir)) {
     if (router) app.use('/', router)
   }
 }
-
-app.use("/api/rooms", roomsRouter);
-app.use("/api/interviews", interviewsRouter);
 
 // Global error middleware last
 app.use('/api/students', studentrouter)
