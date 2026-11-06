@@ -6,7 +6,8 @@ import { Router } from 'express'
 const router = Router()
 
 // Sample data for the lab; no database connection is needed.
-const associations = [
+// Exported so the applications route can check that an associationId exists.
+export const associations = [
   {
     id: 1,
     name: 'Vinci Racing Team',
